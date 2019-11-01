@@ -5,6 +5,22 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <errno.h>
+
+
+
+const int MAXSIZE = 4096;
+
+void die(const char* message)
+{
+    if (errno)
+        perror(message);
+    else
+        printf("ERROR: %s\n", message);
+    exit(1);
+} 
+
+
 
 
 int main(int argc, char*argv[])
@@ -13,6 +29,7 @@ int main(int argc, char*argv[])
     /* 
     */
     int serv_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (serv_sock == -1) die("create socket error!");
     
     struct sockaddr_in serv_addr;
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -22,24 +39,36 @@ int main(int argc, char*argv[])
 
 
     //将套接字和IP，端口绑定
-    bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-
+    int bind_fd = bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+    if (bind_fd == -1) die("bind socket error!");
     //进入监听状态,等待客户发出请求
-    listen(serv_sock, 20);
-
+    int listen_fd = listen(serv_sock, 20);
+    if (listen_fd == -1) die("listen socket error!");
+        
 
     //接受客户端请求
+    printf("==========Waiting for the signal from another star==========\n");
     struct sockaddr_in clnt_addr;
     socklen_t clnt_addr_size = sizeof(clnt_addr);
-    int clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+
+    int clnt_sock;
+    while (1) {
+        clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+        if (clnt_sock == -1) die("accept socket error!");
 
 
-    //向客户端写入数据
-    char str[] = "Hello, world!";
-    write(clnt_sock, str, sizeof(str));
+        //向客户端写入数据
+        char str[MAXSIZE];
+        char buffer[MAXSIZE];
+        fgets(str, MAXSIZE, stdin);
+        write(clnt_sock, str, sizeof(str));
+        read(serv_sock, buffer, sizeof(buffer)-1);
 
-    //关闭套接字
-    close(clnt_sock);
+        printf("elien:%s", buffer); 
+        //关闭套接字
+        close(clnt_sock);
+    }
+
     close(serv_sock);
 
     return 0;

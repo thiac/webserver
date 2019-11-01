@@ -5,8 +5,12 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+const int MAXSIZE = 4096;
 int main(int argc, char*argv[])
 {
+    printf("Message from another star: \n");
+
+    while (1) {
     //创建套接字
     int sock = socket(AF_INET, SOCK_STREAM, 0); 
 
@@ -19,14 +23,17 @@ int main(int argc, char*argv[])
 
     //连接
     connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-
-    char buffer[40];
-    read(sock, buffer, sizeof(buffer)-1);
     
-    printf("Message from another star: %s\n", buffer);
+    char str[MAXSIZE];
+    char buffer[MAXSIZE];
+    fgets(str, MAXSIZE, stdin);
+    read(sock, buffer, sizeof(buffer)-1);
+    write(sock, str, sizeof(str));
+    printf("elien:%s", buffer); 
 
     //关闭套接字
     close(sock);
+    }
     return 0;
 }
 
