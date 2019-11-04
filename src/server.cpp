@@ -74,7 +74,6 @@ int main(int argc, char*argv[])
         fclose(fp);
 
         char str[MAXSIZE];
-        fgets(str, MAXSIZE, stdin);
         read(clnt_sock, str, sizeof(str)-1);
 
         // 进行图像处理
@@ -85,14 +84,17 @@ int main(int argc, char*argv[])
         */
         // 回传操作后的图像
 
-        FILE* fp = fopen(filename, "rb"); //以二进制方式打开文件
+        fp = fopen(filename, "rb"); //以二进制方式打开文件
         if (fp == NULL) die("Cannot open file!");
-        char buffer[MAXSIZE] = {0};
+        //char buffer[MAXSIZE] = {0};
         
         while ((count = fread(buffer, 1, MAXSIZE, fp))>0) { 
             send(clnt_sock, buffer, count, 0); 
         }
+        shutdown(clnt_sock, SHUT_RD);
+        recv(clnt_sock, buffer, MAXSIZE, 0);
 
+        //char res[100] = "It's OK,now!\n";
 
         //关闭套接字
         close(clnt_sock);

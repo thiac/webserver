@@ -46,7 +46,7 @@ int main(int argc, char*argv[])
         //fgets(filename, sizeof(filename), stdin);
         //fflush(stdin);
         FILE* fp = fopen(filename, "rb"); //以二进制方式打开文件
-        if (fp == NULL) die("Cannot open file!");
+        if (fp == NULL) die("Cannot open file");
         char buffer[BUFSIZE] = {0}; //缓冲区
         int count;
         //发送文件
@@ -55,6 +55,11 @@ int main(int argc, char*argv[])
         while ((count = fread(buffer, 1, BUFSIZE, fp))>0) { 
             send(sock, buffer, count, 0); 
         }
+        
+        shutdown(sock, SHUT_RD); //文件读取完毕，断开输出流，向客户端发送FIN包
+        recv(sock, buffer, BUFSIZE, 0); //阻塞，等待客户端接受完毕
+        fclose(fp);
+
 
         printf("what's operation do you want?\n");
         printf("Please input the index number of the op:\n");
@@ -65,11 +70,17 @@ int main(int argc, char*argv[])
         char str[MAXSIZE];
         fgets(str, MAXSIZE, stdin);
         write(sock, str, sizeof(str)); 
+        
+        printf("Please input new file name: ");
+        gets(filename);
+        fp = fopen(filename, "wb");
+        if (fp == NULL) die("Cannot open file");
+        //buffer[BUFSIZE] = {0};
 
         //接受处理后的文件
-        /*while ((count = recv(sock, buffer, BUFSIZE, 0))>0) {
-            fwrite(buffer, 1, BUFFSIZE, fp);
-        }*/
+        while ((count = recv(sock, buffer, BUFSIZE, 0))>0) {
+            fwrite(buffer, 1, BUFSIZE, fp);
+        }
         // 断开链接
         
         
