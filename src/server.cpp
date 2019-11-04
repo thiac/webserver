@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <errno.h>
-
+#include "dbg.h"
 
 
 const int MAXSIZE = 4096;
@@ -55,16 +55,45 @@ int main(int argc, char*argv[])
     while (1) {
         clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
         if (clnt_sock == -1) die("accept socket error!");
+        
 
 
         //向客户端写入数据
-        char str[MAXSIZE];
-        char buffer[MAXSIZE];
-        fgets(str, MAXSIZE, stdin);
-        write(clnt_sock, str, sizeof(str));
-        read(serv_sock, buffer, sizeof(buffer)-1);
+        char filename[MAXSIZE];
+        //fgets(filename, MAXSIZE, stdin);
+        gets(filename);
+        FILE* fp = fopen(filename, "wb"); //以二进制方式打开文件
+        if (fp == NULL) die("Cannot open file!");
+        char buffer[MAXSIZE] = {0};
+        int count;
+        while ((count = recv(clnt_sock, buffer, MAXSIZE, 0))>0) {
+            fwrite(buffer, 1, MAXSIZE, fp);
+        }
+        puts("file transfer ssccessful!");
 
-        printf("elien:%s", buffer); 
+        fclose(fp);
+
+        char str[MAXSIZE];
+        fgets(str, MAXSIZE, stdin);
+        read(clnt_sock, str, sizeof(str)-1);
+
+        // 进行图像处理
+        /*
+        Improcess* imp = new;
+        op;
+
+        */
+        // 回传操作后的图像
+
+        FILE* fp = fopen(filename, "rb"); //以二进制方式打开文件
+        if (fp == NULL) die("Cannot open file!");
+        char buffer[MAXSIZE] = {0};
+        
+        while ((count = fread(buffer, 1, MAXSIZE, fp))>0) { 
+            send(clnt_sock, buffer, count, 0); 
+        }
+
+
         //关闭套接字
         close(clnt_sock);
     }
@@ -73,5 +102,3 @@ int main(int argc, char*argv[])
 
     return 0;
 }
-
-
