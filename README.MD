@@ -38,4 +38,17 @@ socket被翻译为套接字，是计算机之间通信的一种约定，通信�
     ssize_t read(int fd, void* buf, size_t nbytes); //失败返回-1，成功返回字节数
     int send(int fd, const char* buf, int len, int flags);
     int recv(int fd, char* buf, int len, int flags);
+
 - fd 为要写入的文件描述符，buf 为要写入的缓冲区地址，nbytes 为要写入的数据字节数
+
+**关闭套接字**
+
+    int close(int fd);
+    int shutdown(int fd, int howto);
+
+fd 为要断开的套接字，howto 为断开方式，其中howto 有一下取值
+- SHUT_RD: 断开输入流，套接字无法接收数据
+- SHUT_WR: 断开输出流, 套接字无法发送数据
+- SHUT_RDWR: 同时断开I/O 流
+默认情况下close()
+会立即向网络中发送FIN包，不管缓冲区是否还有数据，而shutdown() 会等缓冲区的数据传输完毕再发送FIN包
