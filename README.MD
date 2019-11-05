@@ -8,9 +8,16 @@ socket被翻译为套接字，是计算机之间通信的一种约定，通信�
 - SOCK_DGRAM 无连接，只传输，无校验，效率较高，典型有视频聊天、语音聊天
 
 ## 常用socket函数的接口，
-创建套接字,头文件为<sys/socket.h> 
+*创建套接字*,头文件为<sys/socket.h> 
 
     int socket(int af, int type, int protocol) 
-- af是协议簇（Address Family),也就是IP地址类型，常用有AF_INET表示ipv4和AF_INET6表示ipv6
-- type 为数据传输协议，有SOCK_STREAM和SOCK_DGRAM
-- protocol 表示传输协议, 有IPPROTO_TCP和IPPROTO_UDP，可以默认写０
+- af 是协议簇（Address Family),也就是IP地址类型，常用有 AF_INET 表示 ipv4 和 AF_INET6 表示 ipv6
+- type 为数据传输协议，有 SOCK_STREAM 和 SOCK_DGRAM
+- protocol 表示传输协议, 有 IPPROTO_TCP 和 IPPROTO_UDP，可以默认写０
+
+绑定套接字,服务器要用bind()函数把套接字与特定IP和端口绑定起来，客户端用connect()
+
+    int bind(int sock, struct sockaddr* addr, socklen_t addrlen)
+    int connect(int sock, struct sockaddr* addr, socklen_t addrlen)
+- sock 为
+
