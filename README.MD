@@ -9,7 +9,7 @@ socket被翻译为套接字，是计算机之间通信的一种约定，通信�
 
 ## 常用socket函数的接口，
 创建套接字,头文件<sys/socket.h> 
-"int socket(int af, int type, int protocol)"
+    int socket(int af, int type, int protocol)
 - af是协议簇（Address Family),也就是IP地址类型，常用有AF_INET(ipv4)和AF_INET6(ipv6)
 - type 为数据传输协议，有SOCK_STREAM和SOCK_DGRAM
 - protocol 表示传输协议, 有IPPROTO_TCP和IPPROTO_UDP，可以默认写０
