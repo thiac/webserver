@@ -1,6 +1,6 @@
 #include "transfer.h"
 
-void transfer::send_file(char* file, int sock)
+void transfer::send_file(char* filename, int sock)
 {
     //send magic to detect if whether it is a good connection
     char buffer[MAXSIZE] = {0};
@@ -47,7 +47,7 @@ void transfer::recv_file(char* filename, int sock)
     log_info("file receiving...");
     char buffer[MAXSIZE] = {0};
     char cmdstr[CMDSIZE] = {0};
-    recv(clnt_sock, buffer, MAGICSIZE, 0);
+    recv(sock, buffer, MAGICSIZE, 0);
     char magic[] = "xue_seng_xin_yi_";
     check(strcmp(magic, buffer) != 0, "magic error, trans fail");
     if (filename == NULL) {

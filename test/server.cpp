@@ -11,7 +11,7 @@
 #include "dbg.h"
 
 
-const int MAXSIZE = 4096;
+//const int MAXSIZE = 4096;
 
 int main(int argc, char*argv[])
 {

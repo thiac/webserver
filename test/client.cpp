@@ -8,7 +8,7 @@
 #include "transfer.h"
 #include "dbg.h"
 
-const int MAXSIZE = 4096;
+//const int MAXSIZE = 4096;
 
 void send_file(char* filename, int sock);
 void recv_file(char* filename, int sock);
