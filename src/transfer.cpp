@@ -8,35 +8,24 @@ void transfer::send_file(char* filename, int sock)
     count = send(sock, magic, sizeof(magic), 0);
     log_info("magic count is %d", count);
 
-    //we are client if filename is null
-    if (filename == NULL) {
+    //It is client if filename is null
+    if (strlen(filename) == 0) {
         puts("select a picture");
         scanf("%s", filename);
         puts("Honey, please wait a minute!");
         
-        char str[CMDSIZE] = {0};
+        char str[CMDSIZE-1] = {0};
         help();
         scanf("%s", str);
-        send(sock, str, sizeof(str), 0); 
+        count = send(sock, str, sizeof(str), 0); 
+        log_info("send cmd size is %d:", count);
     }
 
     FILE* fp = fopen(filename, "rb");
     check(fp == NULL, "cannot open file");
-
-    //send length of the file
-    //fseek(fp, 0, SEEK_END);
-    //long size = ftell(fp);
-    //rewind(fp);
-    //std::stringstream ss;
-    //ss << size;
-    //char len[16] = {0};
-    //ss >> len;
-    //printf("lenth of image is: %s\n", len);
-    //count = send(sock, len, sizeof(len), 0);
-    //log_info("send length count is %d", count);
     
-    while ((count = fread(buffer, 1, MAXSIZE, fp))>0) {
-            send(sock, buffer, count, 0);
+    while ((count = fread(buffer, 1, sizeof(buffer), fp))>0) {
+            send(sock, buffer, sizeof(buffer), 0);
     }
     log_info("file transfer successful!");
     fclose(fp);
@@ -47,21 +36,26 @@ void transfer::recv_file(char* filename, int sock)
     log_info("file receiving...");
     char buffer[MAXSIZE] = {0};
     char cmdstr[CMDSIZE] = {0};
-    recv(sock, buffer, MAGICSIZE, 0);
+    count = recv(sock, buffer, MAGICSIZE, 0);
+    log_info("receive magic size is: %d", count);
     char magic[] = "xue_seng_xin_yi_";
     check(strcmp(magic, buffer) != 0, "magic error, trans fail");
-    if (filename == NULL) {
+    if (strlen(filename) == 0) {
         puts("inputs a new file name:");
         scanf("%s", filename);
     } else {
-        recv(sock, cmdstr, CMDSIZE, 0);
-    }
-    FILE* fp = fopen(filename, "wb");
-    check(fp == NULL, "cannot create a new file");
-    while ((count = recv(sock, buffer, MAXSIZE, 0))>0) {
-        fwrite(buffer, 1, MAXSIZE, fp);
+        count = recv(sock, cmdstr, CMDSIZE, 0);
+        log_info("cmd is: %s, cmd size is: %d", cmdstr, count);
     }
 
+    FILE* fp = fopen(filename, "wb");
+    check(fp == NULL, "cannot create a new file");
+    int num;
+    while ((count = recv(sock, buffer, MAXSIZE, 0))>0) {
+        fwrite(buffer, sizeof(char), count, fp);
+        fflush(fp);fsync(fileno(fp));
+    }
+    
     fclose(fp);
 }
 
