@@ -50,7 +50,6 @@ void transfer::recv_file(char* filename, int sock)
 
     FILE* fp = fopen(filename, "wb");
     check(fp == NULL, "cannot create a new file");
-    int num;
     while ((count = recv(sock, buffer, MAXSIZE, 0))>0) {
         fwrite(buffer, sizeof(char), count, fp);
         fflush(fp);fsync(fileno(fp));
