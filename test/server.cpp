@@ -1,10 +1,15 @@
 #include <signal.h>
 #include "transfer.h"
 
+void handler(int sig) {
+    
+    exit(EXIT_SUCCESS);
+}
 
 int main(int argc, char*argv[])
 {
-    signal(SIGCHLD, SIG_IGN);
+    //signal(SIGCHLD, SIG_IGN);
+
 
     //创建套接字
     log_info("create socket");
@@ -50,6 +55,7 @@ int main(int argc, char*argv[])
         if (pid < 0) {
             log_err("fork error");
         } else if (pid == 0) {
+            signal(SIGCHLD, handler); 
             close(serv_sock);
             std::stringstream ss;
             ss<<i;
