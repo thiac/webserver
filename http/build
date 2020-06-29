@@ -1,0 +1,1 @@
+g++ webServer.cpp -o webServer -g -lpthread

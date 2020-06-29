@@ -6,6 +6,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -std=c++11 -W")
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+
+find_package( OpenCV 3.4.3 REQUIRED )
+
+include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories(/usr/local/include)  
 include_directories(${PROJECT_SOURCE_DIR}/include) 
 link_directories(/usr/local/lib)  

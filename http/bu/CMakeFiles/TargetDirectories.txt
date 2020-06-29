@@ -1,0 +1,3 @@
+/home/lee/Documents/code/http/bu/CMakeFiles/edit_cache.dir
+/home/lee/Documents/code/http/bu/CMakeFiles/rebuild_cache.dir
+/home/lee/Documents/code/http/bu/CMakeFiles/ocr_test.dir

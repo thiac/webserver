@@ -1,0 +1,1 @@
+/usr/bin/c++    -g -std=c++11 -W   CMakeFiles/ocr_test.dir/ocr.cc.o  -o ocr_test  -L/usr/local/lib -rdynamic -ltesseract -llept -Wl,-rpath,/usr/local/lib 

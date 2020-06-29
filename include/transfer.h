@@ -1,19 +1,12 @@
 #ifndef _TRANSFER_H
 #define _TRANSFER_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sstream>
-#include "dbg.h"
+#include "sock.h"
 
 const int MAXSIZE = 4096;
 const int CMDSIZE = 20;
 const int MAGICSIZE = 20;
-class transfer {
+class Transfer {
     public:
         //transfer();
         void send_file(char* filename, int sock);

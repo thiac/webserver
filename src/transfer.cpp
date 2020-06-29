@@ -1,12 +1,12 @@
 #include "transfer.h"
 
-void transfer::send_file(char* filename, int sock)
+void Transfer::send_file(char* filename, int sock)
 {
     //send magic to detect if whether it is a good connection
     char buffer[MAXSIZE] = {0};
-    char magic[] = "xue_seng_xin_yi_";
-    count = send(sock, magic, sizeof(magic), 0);
-    log_info("magic count is %d", count);
+    //char magic[] = "xue_seng_xin_yi_";
+    //count = send(sock, magic, sizeof(magic), 0);
+    //log_info("magic count is %d", count);
 
     //It is client if filename is null
     if (strlen(filename) == 0) {
@@ -31,15 +31,15 @@ void transfer::send_file(char* filename, int sock)
     fclose(fp);
 }
 
-void transfer::recv_file(char* filename, int sock)
+void Transfer::recv_file(char* filename, int sock)
 {
     log_info("file receiving...");
     char buffer[MAXSIZE] = {0};
     char cmdstr[CMDSIZE] = {0};
-    count = recv(sock, buffer, MAGICSIZE, 0);
-    log_info("receive magic size is: %d", count);
-    char magic[] = "xue_seng_xin_yi_";
-    check(strcmp(magic, buffer) != 0, "magic error, trans fail");
+    //count = recv(sock, buffer, MAGICSIZE, 0);
+    //log_info("receive magic size is: %d", count);
+    //char magic[] = "xue_seng_xin_yi_";
+    //check(strcmp(magic, buffer) != 0, "magic error, trans fail");
     if (strlen(filename) == 0) {
         puts("inputs a new file name:");
         scanf("%s", filename);
@@ -58,7 +58,7 @@ void transfer::recv_file(char* filename, int sock)
     fclose(fp);
 }
 
-void transfer::help(void)
+void Transfer::help(void)
 {
     puts("what's operation do you want?");
     puts("please input the index number of the op:");
